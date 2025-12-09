@@ -1,52 +1,53 @@
-# bot.py
-import telebot
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 from config import TOKEN, ADMINS
-from courses import categories
-from admin import send_to_admins
+from data import courses
+from utils import get_categories, get_courses_by_category, get_course_by_id
 
-bot = telebot.TeleBot(TOKEN)
+# پیام خوش آمد
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [[InlineKeyboardButton(cat, callback_data=f"category_{cat}")] for cat in get_categories()]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("👋 سلام! دسته‌بندی حوزه‌های برنامه‌نویسی:", reply_markup=reply_markup)
 
-# ---------- START ----------
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    text = "سلام! من ربات فروش دوره‌های برنامه‌نویسی هستم.\nلطفا یک دسته انتخاب کنید:"
-    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for category in categories.keys():
-        markup.add(category)
-    bot.send_message(message.chat.id, text, reply_markup=markup)
+# هندلر کال‌بک‌ها
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    data = query.data
 
-# ---------- دسته‌بندی ----------
-@bot.message_handler(func=lambda m: m.text in categories.keys())
-def show_courses(message):
-    cat = message.text
-    markup = telebot.types.InlineKeyboardMarkup()
-    for course in categories[cat]:
-        btn = telebot.types.InlineKeyboardButton(
-            text=course["name"], callback_data=f"buy_{cat}_{course['name']}"
-        )
-        markup.add(btn)
-    bot.send_message(message.chat.id, f"دوره‌های {cat}:", reply_markup=markup)
+    if data.startswith("category_"):
+        category = data.split("_")[1]
+        keyboard = [[InlineKeyboardButton(course["name"], callback_data=f"course_{category}_{course['id']}")] 
+                    for course in get_courses_by_category(category)]
+        await query.edit_message_text(f"📚 دوره‌های {category}:", reply_markup=InlineKeyboardMarkup(keyboard))
 
-# ---------- خرید دوره ----------
-@bot.callback_query_handler(func=lambda call: call.data.startswith("buy_"))
-def buy_course(call):
-    parts = call.data.split("_")
-    category = parts[1]
-    course_name = "_".join(parts[2:])
-    
-    # پیام به ادمین
-    msg = f"کاربر @{call.from_user.username} ({call.from_user.id}) درخواست خرید داده:\nدوره: {course_name}\nدسته: {category}"
-    send_to_admins(bot, msg)
-    
-    bot.answer_callback_query(call.id, "درخواست شما ثبت شد. ادمین با شما تماس می‌گیرد.")
-    bot.send_message(call.from_user.id, "درخواست شما ثبت شد. لطفا منتظر پیام ادمین باشید.")
+    elif data.startswith("course_"):
+        _, category, course_id = data.split("_")
+        course_id = int(course_id)
+        course = get_course_by_id(category, course_id)
+        if course:
+            keyboard = [[InlineKeyboardButton("💬 درخواست خرید", callback_data=f"buy_{category}_{course_id}")]]
+            await query.edit_message_text(
+                f"دوره: {course['name']}\n💲 قیمت: {course['price']}$\n📝 توضیحات: {course['description']}",
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
 
-# ---------- پیام‌های دیگر ----------
-@bot.message_handler(func=lambda m: True)
-def default_msg(message):
-    bot.send_message(message.chat.id, "لطفا یکی از دسته‌ها را انتخاب کنید یا /start را بزنید.")
+    elif data.startswith("buy_"):
+        _, category, course_id = data.split("_")
+        course_id = int(course_id)
+        course = get_course_by_id(category, course_id)
+        user = update.callback_query.from_user
+        for admin_id in ADMINS:
+            await context.bot.send_message(
+                chat_id=admin_id,
+                text=f"کاربر {user.first_name} ({user.id}) درخواست خرید دوره '{course['name']}' را داده."
+            )
+        await query.edit_message_text("✅ درخواست شما ارسال شد. ادمین‌ها با شما تماس می‌گیرند.")
 
-# ---------- اجرای ربات ----------
-if __name__ == "__main__":
-    print("Bot is running...")
-    bot.infinity_polling()
+# اپلیکیشن اصلی
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CallbackQueryHandler(button))
+
+app.run_polling()
