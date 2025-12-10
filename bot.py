@@ -1,9 +1,10 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from server import keep_alive
 from config import TOKEN, ADMINS
 from data import courses
 from utils import get_categories, get_courses_by_category, get_course_by_id
-
+keep_alive()
 # پیام خوش آمد
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton(cat, callback_data=f"category_{cat}")] for cat in get_categories()]
@@ -44,6 +45,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 text=f"کاربر {user.first_name} ({user.id}) درخواست خرید دوره '{course['name']}' را داده."
             )
         await query.edit_message_text("✅ درخواست شما ارسال شد. ادمین‌ها با شما تماس می‌گیرند.")
+
 
 # اپلیکیشن اصلی
 app = ApplicationBuilder().token(TOKEN).build()
