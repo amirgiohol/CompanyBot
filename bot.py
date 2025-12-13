@@ -4,6 +4,8 @@ from config import TOKEN, ADMINS
 from data import courses
 from utils import get_categories, get_courses_by_category, get_course_by_id
 
+CREATOR_NAME = "AMIRSAMDERAKHSHAN"  # اسم سازنده
+
 # =========================
 # منو اصلی
 # =========================
@@ -19,9 +21,15 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if update.message:
-        await update.message.reply_text("👋 سلام! منو اصلی:", reply_markup=reply_markup)
+        await update.message.reply_text(
+            f"👋 سلام! منوی اصلی این بات توسط {CREATOR_NAME} ساخته شده است:",
+            reply_markup=reply_markup
+        )
     elif update.callback_query:
-        await update.callback_query.edit_message_text("👋 منو اصلی:", reply_markup=reply_markup)
+        await update.callback_query.edit_message_text(
+            f"👋 منوی اصلی این بات توسط {CREATOR_NAME} ساخته شده است:",
+            reply_markup=reply_markup
+        )
 
 # =========================
 # Callback Handler
@@ -40,7 +48,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
         keyboard.append([InlineKeyboardButton("🏠 منوی اصلی", callback_data="main_menu")])
         await query.edit_message_text(
-            f"📚 دوره‌های {category}:", reply_markup=InlineKeyboardMarkup(keyboard)
+            f"📚 دوره‌های {category} (ساخته شده توسط {CREATOR_NAME}):",
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
     # دوره‌ها
@@ -61,7 +70,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(
             f"📝 دوره: {course['name']}\n"
             f"💲 قیمت: {course['price']}$\n"
-            f"📄 توضیحات: {course['description']}",
+            f"📄 توضیحات: {course['description']}\n\n"
+            f"💡 این دوره توسط {CREATOR_NAME} ارائه شده است.",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
@@ -75,11 +85,13 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         for admin_id in ADMINS:
             await context.bot.send_message(
                 chat_id=admin_id,
-                text=f"کاربر {user.first_name} ({user.id}) درخواست خرید دوره '{course['name']}' داده."
+                text=f"کاربر {user.first_name} ({user.id}) درخواست خرید دوره '{course['name']}' داده.\n"
+                     f"بات توسط {CREATOR_NAME} ساخته شده است."
             )
 
         await query.edit_message_text(
-            "✅ درخواست شما ثبت شد. ادمین‌ها به‌زودی با شما تماس می‌گیرند."
+            f"✅ درخواست شما ثبت شد. ادمین‌ها به‌زودی با شما تماس می‌گیرند.\n"
+            f"بات توسط {CREATOR_NAME} ساخته شده است."
         )
 
     # دوره‌های رایگان
@@ -88,13 +100,21 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not free_courses:
             await query.edit_message_text("❌ دوره رایگان موجود نیست.")
             return
-        keyboard = [[InlineKeyboardButton(c["name"], callback_data=f"course_{c.get('category')}_{c['id']}")] for c in free_courses]
+        keyboard = [
+            [InlineKeyboardButton(c["name"], callback_data=f"course_{c.get('category')}_{c['id']}")] for c in free_courses
+        ]
         keyboard.append([InlineKeyboardButton("🏠 منوی اصلی", callback_data="main_menu")])
-        await query.edit_message_text("📚 دوره‌های رایگان:", reply_markup=InlineKeyboardMarkup(keyboard))
+        await query.edit_message_text(
+            f"📚 دوره‌های رایگان (توسط {CREATOR_NAME} ارائه شده):",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
 
     # تماس با ادمین
     elif data == "contact_admin":
-        await query.edit_message_text("📞 لطفا با ادمین‌ها تماس بگیرید یا درخواست خرید بدهید.")
+        await query.edit_message_text(
+            f"📞 لطفا با ادمین‌ها تماس بگیرید یا درخواست خرید بدهید.\n"
+            f"این بات توسط {CREATOR_NAME} ساخته شده است."
+        )
 
     # بازگشت به منوی اصلی
     elif data == "main_menu":
@@ -109,7 +129,7 @@ def main():
     app.add_handler(CommandHandler("start", main_menu))
     app.add_handler(CallbackQueryHandler(button))
 
-    print("Bot is running...")
+    print(f"Bot by {CREATOR_NAME} is running...")
     app.run_polling()
 
 
