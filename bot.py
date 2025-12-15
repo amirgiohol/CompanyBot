@@ -18,9 +18,9 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if update.message:
-        await update.message.reply_text("👋 سلام! منوی اصلی AMIRSAMDERAKHSHAN:", reply_markup=reply_markup)
+        await update.message.reply_text("👋 سلام! منوی اصلی @Amirsamderakhshan:", reply_markup=reply_markup)
     elif update.callback_query:
-        await update.callback_query.edit_message_text("👋 منوی اصلی AMIRSAMDERAKHSHAN:", reply_markup=reply_markup)
+        await update.callback_query.edit_message_text("👋 منوی اصلی @Amirsamderakhshan:", reply_markup=reply_markup)
 
 # =========================
 # Callback Handler
@@ -88,7 +88,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("📚 دوره‌های رایگان:", reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif data == "contact_admin":
-        await query.edit_message_text("📞 لطفا با ادمین‌ها تماس بگیرید. شناسه سازنده: AMIRSAMDERAKHSHAN")
+        await query.edit_message_text("📞 لطفا با ادمین‌ها تماس بگیرید. شناسه سازنده: @Amirsamderakhshan")
 
     elif data == "main_menu":
         await main_menu(update, context)
@@ -102,7 +102,7 @@ def main():
     app.add_handler(CommandHandler("start", main_menu))
     app.add_handler(CallbackQueryHandler(button))
 
-    print("Bot is running... AMIRSAMDERAKHSHAN")
+    print("Bot is running... @Amirsamderakhshan")
     app.run_polling()
 
 
