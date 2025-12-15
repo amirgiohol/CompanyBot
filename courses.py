@@ -1,42 +1,39 @@
+# data.py
 courses = {
     "زبان‌های برنامه‌نویسی": [
-        {"id": 1, "name": "C", "price": 0, "description": "آموزش مقدماتی C", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 2, "name": "C++", "price": 5, "description": "آموزش کامل C++", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 3, "name": "C#", "price": 10, "description": "برنامه‌نویسی با C#", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 4, "name": "Go", "price": 15, "description": "زبان Go از صفر تا صد", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 5, "name": "Java", "price": 20, "description": "آموزش Java و شی‌گرایی", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 6, "name": "JavaScript", "price": 0, "description": "مقدماتی و پیشرفته JS", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 7, "name": "Kotlin", "price": 12, "description": "Kotlin برای اپلیکیشن اندروید", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 8, "name": "Python", "price": 0, "description": "آموزش Python کاربردی", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 9, "name": "Ruby", "price": 8, "description": "زبان Ruby و Rails", "category": "زبان‌های برنامه‌نویسی"},
-        {"id": 10, "name": "Swift", "price": 10, "description": "اپلیکیشن iOS با Swift", "category": "زبان‌های برنامه‌نویسی"},
+        {"id": 1, "name": "C++", "price": 50, "description": "آموزش C++ از پایه"},
+        {"id": 2, "name": "Python", "price": 0, "description": "آموزش Python رایگان"},
+        {"id": 3, "name": "Java", "price": 40, "description": "آموزش Java برای مبتدیان"},
+        {"id": 4, "name": "JavaScript", "price": 30, "description": "جاوااسکریپت پیشرفته"},
+        {"id": 5, "name": "C#", "price": 35, "description": "C# برای ساخت اپلیکیشن و بازی"},
+        {"id": 6, "name": "Go", "price": 45, "description": "زبان Go برای توسعه وب و سرور"},
+        {"id": 7, "name": "Rust", "price": 50, "description": "زبان Rust برای سیستم‌های امن و سریع"}
     ],
     "توسعه وب": [
-        {"id": 1, "name": "HTML & CSS", "price": 0, "description": "مبانی طراحی سایت", "category": "توسعه وب"},
-        {"id": 2, "name": "JavaScript Frontend", "price": 15, "description": "JS و فریم‌ورک‌ها", "category": "توسعه وب"},
-        {"id": 3, "name": "React", "price": 20, "description": "React و SPA", "category": "توسعه وب"},
-        {"id": 4, "name": "Node.js", "price": 20, "description": "Backend با Node.js", "category": "توسعه وب"},
-        {"id": 5, "name": "Django", "price": 25, "description": "Python وب فریم‌ورک", "category": "توسعه وب"},
+        {"id": 1, "name": "HTML & CSS", "price": 0, "description": "آموزش وب پایه"},
+        {"id": 2, "name": "React", "price": 40, "description": "ساخت SPA با React"},
+        {"id": 3, "name": "Node.js", "price": 50, "description": "Backend با Node.js"},
+        {"id": 4, "name": "Django", "price": 55, "description": "وب اپلیکیشن با Django"},
+        {"id": 5, "name": "Flask", "price": 45, "description": "وب اپلیکیشن سبک با Flask"}
     ],
-    "هوش مصنوعی و داده": [
-        {"id": 1, "name": "Machine Learning", "price": 30, "description": "مقدماتی تا پیشرفته ML", "category": "هوش مصنوعی و داده"},
-        {"id": 2, "name": "Deep Learning", "price": 35, "description": "شبکه‌های عصبی پیشرفته", "category": "هوش مصنوعی و داده"},
-        {"id": 3, "name": "Data Science", "price": 25, "description": "تحلیل داده با Python", "category": "هوش مصنوعی و داده"},
-        {"id": 4, "name": "Pandas & NumPy", "price": 0, "description": "ابزارهای پردازش داده", "category": "هوش مصنوعی و داده"},
+    "هوش مصنوعی": [
+        {"id": 1, "name": "Machine Learning", "price": 60, "description": "مقدمه‌ای بر یادگیری ماشین"},
+        {"id": 2, "name": "Deep Learning", "price": 70, "description": "شبکه‌های عصبی عمیق"},
+        {"id": 3, "name": "Data Science", "price": 65, "description": "تحلیل داده و آمار"}
     ],
     "اپلیکیشن و موبایل": [
-        {"id": 1, "name": "Android Studio", "price": 20, "description": "توسعه اندروید از صفر", "category": "اپلیکیشن و موبایل"},
-        {"id": 2, "name": "Flutter", "price": 25, "description": "توسعه اپلیکیشن چندسکویی", "category": "اپلیکیشن و موبایل"},
-        {"id": 3, "name": "iOS Swift", "price": 20, "description": "توسعه iOS با Swift", "category": "اپلیکیشن و موبایل"},
+        {"id": 1, "name": "Flutter", "price": 50, "description": "ساخت اپلیکیشن موبایل با Flutter"},
+        {"id": 2, "name": "Android Kotlin", "price": 40, "description": "برنامه‌نویسی اندروید با Kotlin"},
+        {"id": 3, "name": "iOS Swift", "price": 55, "description": "برنامه‌نویسی آیفون با Swift"}
     ],
     "امنیت": [
-        {"id": 1, "name": "Cybersecurity Basics", "price": 15, "description": "مبانی امنیت شبکه", "category": "امنیت"},
-        {"id": 2, "name": "Ethical Hacking", "price": 25, "description": "آموزش هک اخلاقی", "category": "امنیت"},
-        {"id": 3, "name": "Pentesting", "price": 30, "description": "تست نفوذ پیشرفته", "category": "امنیت"},
+        {"id": 1, "name": "Cyber Security", "price": 70, "description": "امنیت شبکه و سایت"},
+        {"id": 2, "name": "Ethical Hacking", "price": 80, "description": "هک قانونی و تست نفوذ"},
+        {"id": 3, "name": "Penetration Testing", "price": 75, "description": "آزمون نفوذ برای امنیت"}
     ],
     "بازی‌سازی": [
-        {"id": 1, "name": "Unity", "price": 20, "description": "ساخت بازی دوبعدی و سه‌بعدی", "category": "بازی‌سازی"},
-        {"id": 2, "name": "Unreal Engine", "price": 25, "description": "ساخت بازی حرفه‌ای", "category": "بازی‌سازی"},
-        {"id": 3, "name": "Godot", "price": 15, "description": "بازی‌سازی رایگان و متن‌باز", "category": "بازی‌سازی"},
-    ],
+        {"id": 1, "name": "Unity", "price": 80, "description": "ساخت بازی با Unity"},
+        {"id": 2, "name": "Unreal Engine", "price": 90, "description": "ساخت بازی با Unreal Engine"},
+        {"id": 3, "name": "Godot", "price": 50, "description": "بازی‌سازی با Godot Engine"}
+    ]
 }

@@ -3,6 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 from config import TOKEN, ADMINS
 from utils import get_categories, get_courses_by_category, get_course_by_id
+from data import courses
 
 # =========================
 # منو اصلی
@@ -29,7 +30,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     data = query.data
 
-    # دسته‌بندی‌ها
     if data.startswith("category_"):
         category = data.replace("category_", "")
         keyboard = [
@@ -39,7 +39,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard.append([InlineKeyboardButton("🏠 منوی اصلی", callback_data="main_menu")])
         await query.edit_message_text(f"📚 دوره‌های {category}:", reply_markup=InlineKeyboardMarkup(keyboard))
 
-    # دوره‌ها
     elif data.startswith("course_"):
         _, category, course_id = data.split("_")
         course_id = int(course_id)
@@ -47,13 +46,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not course:
             await query.edit_message_text("❌ دوره پیدا نشد.")
             return
-
         keyboard = [
             [InlineKeyboardButton("💬 درخواست خرید", callback_data=f"buy_{category}_{course_id}")],
             [InlineKeyboardButton("⬅️ بازگشت به دسته‌بندی", callback_data=f"category_{category}")],
             [InlineKeyboardButton("🏠 منوی اصلی", callback_data="main_menu")]
         ]
-
         await query.edit_message_text(
             f"📝 دوره: {course['name']}\n"
             f"💲 قیمت: {course['price']}$\n"
@@ -61,7 +58,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
-    # درخواست خرید
     elif data.startswith("buy_"):
         _, category, course_id = data.split("_")
         course_id = int(course_id)
@@ -78,35 +74,31 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "✅ درخواست شما ثبت شد. ادمین‌ها به‌زودی با شما تماس می‌گیرند."
         )
 
-    # دوره‌های رایگان
     elif data == "free_courses":
         free_courses = []
         for cat in get_categories():
             for c in get_courses_by_category(cat):
                 if c.get("price") == 0:
-                    free_courses.append(c)
+                    free_courses.append((cat, c))
         if not free_courses:
             await query.edit_message_text("❌ دوره رایگان موجود نیست.")
             return
-        keyboard = [[InlineKeyboardButton(c["name"], callback_data=f"course_{cat}_{c['id']}")] 
-                    for cat in courses for c in courses[cat] if c.get("price") == 0]
+        keyboard = [[InlineKeyboardButton(c["name"], callback_data=f"course_{cat}_{c['id']}")] for cat, c in free_courses]
         keyboard.append([InlineKeyboardButton("🏠 منوی اصلی", callback_data="main_menu")])
         await query.edit_message_text("📚 دوره‌های رایگان:", reply_markup=InlineKeyboardMarkup(keyboard))
 
-    # تماس با ادمین
     elif data == "contact_admin":
-        await query.edit_message_text("📞 لطفا با ادمین‌ها تماس بگیرید یا درخواست خرید بدهید. شناسه سازنده: AMIRSAMDERAKHSHAN")
+        await query.edit_message_text("📞 لطفا با ادمین‌ها تماس بگیرید. شناسه سازنده: AMIRSAMDERAKHSHAN")
 
-    # بازگشت به منوی اصلی
     elif data == "main_menu":
         await main_menu(update, context)
-
 
 # =========================
 # شروع بات
 # =========================
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
+    # نمایش منوی اصلی خودکار با دستور start
     app.add_handler(CommandHandler("start", main_menu))
     app.add_handler(CallbackQueryHandler(button))
 
