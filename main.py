@@ -1,7 +1,7 @@
+import asyncio
+from aiogram import Bot, Dispatcher
 from app.config import BOT_TOKEN
 from app.handlers import start
-from aiogram import Bot, Dispatcher
-import asyncio
 
 async def main():
     bot = Bot(token=BOT_TOKEN)
