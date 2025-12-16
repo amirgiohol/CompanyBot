@@ -1,4 +1,7 @@
-python-telegram-bot
-python-telegram-bot==20.8
-requests
-Flask
+aiogram==3.4.1
+fastapi
+uvicorn
+sqlalchemy
+asyncpg
+python-dotenv
+openai
